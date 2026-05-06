@@ -11,22 +11,39 @@
 #define I2C_ADDRESS 0x3C
 #define rxSim 4
 #define txSim 5
+#define interruptPin 3
 
+#define PANJANG_BUFFER 150
+#define SERVER_IP "36.74.90.11"
+#define SERVER_PORT "5005"
+#define DEVICE_TOKEN "WS-866501012348821"
+
+// System
 enum SystemState {
       SYS_CONNECTING,
       SYS_IDLE,
       SYS_SAMPLING,
       SYS_SENDING,
 };
+extern SystemState systemState;
 
+// Display
+extern SSD1306AsciiWire oled;
+extern String statusTeks;
+extern uint8_t progressLevel;
+extern bool first,
+    dataUpdate;
+
+// Network
+extern SoftwareSerial sim800c;
 enum ConnState {
       CON_RESTART_MODEM,
       CON_WAIT_READY,
       CON_WAIT_ATE0,
       CON_CHECK_STATUS,
       CON_CIPSHUT,
-      CON_CHECK_SIGNAL,
       CON_CHECK_SIM,
+      CON_CHECK_SIGNAL,
       CON_CHECK_REG,
       CON_CHECK_GPRS,
       CON_CHECK_APN,
@@ -35,17 +52,63 @@ enum ConnState {
       CON_CHECK_IP,
       CON_DONE,
 };
-
-extern SystemState systemState;
+enum SendState {
+      SEND_TCP_OPEN,
+      SEND_HEARTBEAT,
+      SEND_WAIT_PONG,
+      SEND_REQUEST,
+      SEND_TRANSMIT,
+      SEND_WAIT_REPLY,
+      SEND_CLOSE,
+      SEND_DONE,
+};
 extern ConnState connState;
-extern SoftwareSerial sim800c;
-extern SSD1306AsciiWire oled;
-
-extern uint32_t waktuPrint;
-extern uint32_t waktuKirim;
-extern uint8_t retryReg;
-
-extern char buf[64];
+extern SendState sendState;
+extern uint32_t waktuKirim,
+    waktuPrint;
+extern uint8_t bufIdx,
+    retryReg;
 extern bool sudahKirim;
+extern char buf[64];
+
+// Sensor
+extern MAX30105 particleSensor;
+struct LpfState {
+      int32_t x1 = 0;
+      int32_t y1 = 0;
+};
+struct DesimasiState {
+      int32_t s1Sum, s2Sum, s3Sum;
+      uint8_t s1Count, s2Count, s3Count;
+};
+struct DataSensor {
+      int16_t bufferIR[PANJANG_BUFFER];
+      int16_t bufferRed[PANJANG_BUFFER];
+};
+struct HasilVitals {
+      uint8_t hr;
+      uint8_t spo2;
+      uint8_t sbp;
+      uint8_t dbp;
+      uint8_t hb;
+      uint16_t std;
+};
+extern LpfState filterRed,
+    filterIR;
+extern DesimasiState desimRed,
+    desimIR;
+extern DataSensor wadah;
+extern HasilVitals dataVitals;
+extern int32_t rawRed,
+    filteredRed,
+    rawIR,
+    filteredIR;
+extern uint8_t bufferIdx;
+extern bool dataReady;
+
+// main
+extern uint32_t waktuMulai;
+extern uint8_t sisaDetik;
+extern bool butuhRetryCepat;
 
 #endif
