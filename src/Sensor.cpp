@@ -12,7 +12,7 @@ void initSensorMAX() {
       particleSensor.setup(255, 1, 2, 400, 411, 16384);
       particleSensor.enableDATARDY();
       particleSensor.getINT1();  // Clear interrupt flag
-      attachInterrupt(digitalPinToInterrupt(interruptPin), handleInterrupt, FALLING);
+      attachInterrupt(digitalPinToInterrupt(INTERRUPT), handleInterrupt, FALLING);
 
       particleSensor.setPulseAmplitudeRed(0);   // Red mati saat standby
       particleSensor.setPulseAmplitudeIR(255);  // IR tetap nyala untuk deteksi tangan
@@ -48,7 +48,7 @@ void bangunSesi() {
       particleSensor.getINT1();    // Clear flag interrupt pada sensor agar tidak ada trigger palsu di awal
 
       // Pasang kembali interupsi untuk mulai mendeteksi data baru
-      attachInterrupt(digitalPinToInterrupt(interruptPin), handleInterrupt, FALLING);
+      attachInterrupt(digitalPinToInterrupt(INTERRUPT), handleInterrupt, FALLING);
 }
 
 void prosesStandby() {

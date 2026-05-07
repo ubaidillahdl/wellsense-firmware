@@ -6,6 +6,7 @@
 
 // System
 SystemState systemState = SYS_CONNECTING;
+HalamanState halamanState = HAL_VITALS;
 
 // Display
 SSD1306AsciiWire oled;
@@ -15,14 +16,18 @@ bool first = true,
      dataUpdate = false;
 
 // Network
-SoftwareSerial sim800c(rxSim, txSim);
+SoftwareSerial sim800c(RX_SIM, TX_SIM);
 ConnState connState = CON_WAIT_READY;
 SendState sendState = SEND_TCP_OPEN;
 uint32_t waktuKirim = millis(),
          waktuPrint = millis();
 uint8_t bufIdx = 0,
         retryReg = 0;
+uint8_t jamHH = 0,
+        jamMM = 0,
+        jamSS = 0;
 bool sudahKirim = false;
+bool sudahRender = true;
 char buf[64];
 
 // Sensor
@@ -86,14 +91,14 @@ void loop() {
 
                         if (dataReady) prosesSampling();
                         if (bufferIdx >= PANJANG_BUFFER) {
-                              detachInterrupt(digitalPinToInterrupt(interruptPin));
+                              detachInterrupt(digitalPinToInterrupt(INTERRUPT));
                               normalisasiBuffer();
 
                               waktuMulai = millis();
                               systemState = SYS_SENDING;
                         }
                   } else {
-                        detachInterrupt(digitalPinToInterrupt(interruptPin));
+                        detachInterrupt(digitalPinToInterrupt(INTERRUPT));
                         waktuMulai = millis();
                         systemState = SYS_IDLE;
                         butuhRetryCepat = true;
