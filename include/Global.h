@@ -9,12 +9,15 @@
 #include "SSD1306AsciiWire.h"
 
 #define I2C_ADDRESS 0x3C
-#define rxSim 4
-#define txSim 5
-#define interruptPin 3
+#define RX_SIM 4
+#define TX_SIM 5
+#define INTERRUPT 3
+#define VIBRATOR 7
+#define BUTTON 6
 
+#define TOTAL_HALAMAN 2
 #define PANJANG_BUFFER 150
-#define SERVER_IP "36.74.90.11"
+#define SERVER_IP "125.164.81.29"
 #define SERVER_PORT "5005"
 #define DEVICE_TOKEN "WS-866501012348821"
 
@@ -25,7 +28,12 @@ enum SystemState {
       SYS_SAMPLING,
       SYS_SENDING,
 };
+enum HalamanState {
+      HAL_VITALS,
+      HAL_JAM,
+};
 extern SystemState systemState;
+extern HalamanState halamanState;
 
 // Display
 extern SSD1306AsciiWire oled;
@@ -68,7 +76,11 @@ extern uint32_t waktuKirim,
     waktuPrint;
 extern uint8_t bufIdx,
     retryReg;
+extern uint8_t jamHH,
+    jamMM,
+    jamSS;
 extern bool sudahKirim;
+extern bool sudahRender;
 extern char buf[64];
 
 // Sensor

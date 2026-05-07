@@ -687,6 +687,15 @@ bool pecahDataFeedback(char* buf) {
       ptr = strtok(NULL, ";");
       if (ptr) dataVitals.std = atoi(ptr);
 
+      ptr = strtok(NULL, ";");
+      if (ptr) jamHH = atoi(ptr);
+
+      ptr = strtok(NULL, ";");
+      if (ptr) jamMM = atoi(ptr);
+
+      ptr = strtok(NULL, ";");
+      if (ptr) jamSS = atoi(ptr);
+
       if (dataVitals.hr > 0) {
             // Print hasil ke Serial untuk verifikasi
             Serial.println(F("\n======= HASIL ANALISA ======="));

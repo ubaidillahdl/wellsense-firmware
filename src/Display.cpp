@@ -6,9 +6,15 @@ void initDisp() {
       Wire.setClock(100000L);
       oled.begin(&Adafruit128x64, I2C_ADDRESS);
 
-      oled.setCursor(0, 3);
-      oled.setFont(Cooper19);
-      oled.print(F("Wellsense"));
+      oled.setCursor(24, 3);
+      oled.setFont(Arial_bold_14);
+      oled.print(F("WELLSENSE"));
+
+      oled.setCursor(66, 5);
+      oled.setFont(System5x7);
+      oled.print(F("Device"));
+      // uint8_t w = oled.strWidth("Device");
+      // Serial.println(w);
 
       delay(3000);
       oled.clear();
@@ -18,18 +24,56 @@ void initDisp() {
 }
 
 void updateTampilan() {
-      if (first || dataUpdate) {
-            tampilVitals();
-            first = false;
-            dataUpdate = false;
+      bacaTombol();
+
+      switch (halamanState) {
+            case HAL_VITALS: {
+                  if (first || dataUpdate) {
+                        oled.setFont(System5x7);
+                        tampilVitals();
+                        first = false;
+                        dataUpdate = false;
+                  }
+                  status();
+            } break;
+
+            case HAL_JAM: {
+                  static uint32_t waktuTickJam = 0;
+
+                  if (!sudahRender || millis() - waktuTickJam > 1000) {
+                        if (sudahRender) {
+                              jamSS++;
+                              if (jamSS >= 60) {
+                                    jamSS = 0;
+                                    jamMM++;
+                              }
+                              if (jamMM >= 60) {
+                                    jamMM = 0;
+                                    jamHH++;
+                              }
+                              if (jamHH >= 24) {
+                                    jamHH = 0;
+                              }
+                        }
+
+                        oled.setFont(lcdnums14x24);
+                        oled.setCursor(8, 3);
+
+                        if (jamHH < 10) oled.print(F("0"));
+                        oled.print(jamHH);
+                        oled.print(F(":"));
+                        if (jamMM < 10) oled.print(F("0"));
+                        oled.print(jamMM);
+                        oled.print(F(":"));
+                        if (jamSS < 10) oled.print(F("0"));
+                        oled.print(jamSS);
+
+                        sudahRender = true;
+                        waktuTickJam = millis();
+                  }
+                  status();
+            } break;
       }
-
-      oled.setCursor(0, 0);
-      oled.print(statusTeks);
-      for (int i = 0; i < (10 - (int)statusTeks.length()); i++) oled.print(F(" "));
-
-      oled.setCursor(0, 1);
-      for (int i = 0; i <= 5; i++) oled.print((i <= progressLevel) ? F("o") : F("."));
 }
 
 void tampilVitals() {
@@ -123,4 +167,14 @@ void tampilVitals() {
       oled.print(F("HB"));
       oled.setCursor(105, 7);
       oled.print(F("g/L"));
+}
+
+void status() {
+      oled.setFont(System5x7);
+      oled.setCursor(0, 0);
+      oled.print(statusTeks);
+      for (int i = 0; i < (10 - (int)statusTeks.length()); i++) oled.print(F(" "));
+
+      oled.setCursor(0, 1);
+      for (int i = 0; i <= 5; i++) oled.print((i <= progressLevel) ? F("o") : F("."));
 }

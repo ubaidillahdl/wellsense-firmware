@@ -5,6 +5,8 @@
 
 // System.cpp
 void initSistem();
+void vibrate();
+void bacaTombol();
 
 // Network.cpp
 void kirimAT(const char *perintah);
@@ -18,6 +20,7 @@ void resetKeConnecting();
 void initDisp();
 void updateTampilan();
 void tampilVitals();
+void status();
 
 // Sensor.cpp
 void initSensorMAX();
