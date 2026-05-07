@@ -15,7 +15,6 @@
 #define VIBRATOR 7
 #define BUTTON 6
 
-#define TOTAL_HALAMAN 2
 #define PANJANG_BUFFER 150
 #define SERVER_IP "125.164.81.29"
 #define SERVER_PORT "5005"
