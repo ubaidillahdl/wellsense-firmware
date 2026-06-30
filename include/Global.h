@@ -16,7 +16,7 @@
 #define BUTTON 6
 
 #define PANJANG_BUFFER 150
-#define SERVER_IP "125.164.81.29"
+#define SERVER_IP "103.93.134.24"
 #define SERVER_PORT "5005"
 #define DEVICE_TOKEN "WS-866501012348821"
 
@@ -61,8 +61,6 @@ enum ConnState {
 };
 enum SendState {
       SEND_TCP_OPEN,
-      SEND_HEARTBEAT,
-      SEND_WAIT_PONG,
       SEND_REQUEST,
       SEND_TRANSMIT,
       SEND_WAIT_REPLY,
