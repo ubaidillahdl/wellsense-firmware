@@ -18,7 +18,7 @@
 #define PANJANG_BUFFER 150
 #define SERVER_IP "103.93.134.24"
 #define SERVER_PORT "5005"
-#define DEVICE_TOKEN "WS-866501012348821"
+#define DEVICE_TOKEN "WS-0022"
 
 // System
 enum SystemState {
